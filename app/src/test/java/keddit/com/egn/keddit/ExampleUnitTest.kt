@@ -1,4 +1,4 @@
-package kotlin.egn.com.keddit
+package keddit.com.egn.keddit
 
 import org.junit.Test
 
