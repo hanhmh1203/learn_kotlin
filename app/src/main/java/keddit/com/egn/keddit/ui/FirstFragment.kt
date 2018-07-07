@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import keddit.com.egn.keddit.R
+import keddit.com.egn.keddit.commons.NewsAdapter
 import keddit.com.egn.keddit.commons.inflate
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
@@ -38,11 +39,18 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        initAdapter()
     }
 
     fun initRecyclerView() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    fun initAdapter() {
+        if (recyclerView.adapter == null) {
+            recyclerView.adapter = NewsAdapter()
+        }
     }
 
 
