@@ -5,6 +5,27 @@ import android.os.Parcelable
 import keddit.com.egn.keddit.commons.AdapterConstrants
 import keddit.com.egn.keddit.ui.adapter.commons.ViewType
 
+data class RedditNews(val before: String, val after: String, val news: List<RedditNewsItem>) : Parcelable {
+    companion object {
+        @Suppress("unused")
+        @JvmField
+        val CREATOR: Parcelable.Creator<RedditNews> = object : Parcelable.Creator<RedditNews> {
+            override fun createFromParcel(source: Parcel): RedditNews = RedditNews(source)
+            override fun newArray(size: Int): Array<RedditNews?> = arrayOfNulls(size)
+        }
+    }
+
+    constructor(source: Parcel) : this(source.readString(), source.readString(), source.createTypedArrayList(RedditNewsItem.CREATOR))
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeString(after)
+        dest?.writeString(before)
+        dest?.writeTypedList(news)
+    }
+}
+
 data class RedditNewsItem(val author: String,
                           val title: String,
                           val numComments: Int,

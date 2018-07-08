@@ -5,14 +5,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
+import io.reactivex.schedulers.Schedulers
 
 import keddit.com.egn.keddit.R
+import keddit.com.egn.keddit.base.RxBaseFragment
 import keddit.com.egn.keddit.ui.adapter.NewsAdapter
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
+import keddit.com.egn.keddit.ui.worker.NewsManager
 import kotlinx.android.synthetic.main.fragment_first.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,7 +34,7 @@ private const val ARG_PARAM2 = "param2"
  * to handle interaction events.
  *
  */
-class FirstFragment : Fragment() {
+class FirstFragment : RxBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -35,17 +42,23 @@ class FirstFragment : Fragment() {
         return container?.inflate(R.layout.fragment_first)
     }
 
+    private val newsManager by lazy { NewsManager() }
+    //    private var disposables: Disposables?=null
+    private lateinit var disposable: Disposable
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initAdapter()
-        if(savedInstanceState==null){
-            val news = mutableListOf<RedditNewsItem>()
-            for (i in 1..10){
-                news.add(RedditNewsItem("author$i", "title$i", i, 1457207701L - i * 200,
-                        "http://lorempixel.com/200/200/technics/$i", "url"))
-            }
-            (recyclerView.adapter as NewsAdapter).addNews(news)
+        if (savedInstanceState == null) {
+            disposable = newsManager.getNews().subscribeOn(Schedulers.io())
+                    .subscribe({
+                        (recyclerView.adapter as NewsAdapter).addNews(it)
+                    }) {
+                        Log.e("hanhmh1203", it.message)
+
+                    }
+//            compositeDisposable.add(disposable)
         }
     }
 
