@@ -16,9 +16,12 @@ import io.reactivex.schedulers.Schedulers
 
 import keddit.com.egn.keddit.R
 import keddit.com.egn.keddit.base.RxBaseFragment
+import keddit.com.egn.keddit.commons.LogI
 import keddit.com.egn.keddit.ui.adapter.NewsAdapter
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
+import keddit.com.egn.keddit.ui.adapter.commons.InfiniteScrollListener
+import keddit.com.egn.keddit.ui.adapter.model.RedditNews
 import keddit.com.egn.keddit.ui.worker.NewsManager
 import kotlinx.android.synthetic.main.fragment_first.*
 
@@ -35,6 +38,9 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class FirstFragment : RxBaseFragment() {
+    companion object {
+        private val KEY_REDDIT_NEWS = "redditNews"
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -45,26 +51,56 @@ class FirstFragment : RxBaseFragment() {
     private val newsManager by lazy { NewsManager() }
     //    private var disposables: Disposables?=null
     private lateinit var disposable: Disposable
+    private var redditNews: RedditNews? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initAdapter()
-        if (savedInstanceState == null) {
-            disposable = newsManager.getNews().subscribeOn(Schedulers.io())
-                    .subscribe({
-                        (recyclerView.adapter as NewsAdapter).addNews(it)
-                    }) {
-                        Log.e("hanhmh1203", it.message)
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
+            "savedInstanceState".LogI()
+            redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
+            "Load savedInstanceState size ${redditNews!!.news.size}"
+            (recyclerView.adapter as NewsAdapter).clearAndAddNews(redditNews!!.news)
 
-                    }
-//            compositeDisposable.add(disposable)
+        } else {
+            requestNews()
+        }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        "onSaveInstanceState".LogI()
+        val news = (recyclerView.adapter as NewsAdapter).getNews()
+        if (redditNews != null && news.size > 0) {
+            "onSaveInstanceState size: ${news.size}".LogI()
+            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news))
         }
     }
 
+    private fun requestNews() {
+        "requestNews ".LogI()
+        disposable = newsManager.getNews(redditNews?.after ?: "")
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    redditNews = it
+                    (recyclerView.adapter as NewsAdapter).addNews(redditNews!!.news)
+                }, { Log.e("hanhmh1203", it.message) })
+        compositeDisposable.add(disposable)
+    }
+
     fun initRecyclerView() {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.apply {
+            recyclerView.setHasFixedSize(true)
+
+            val linearLayout = LinearLayoutManager(context)
+            recyclerView.layoutManager = linearLayout
+            recyclerView.clearOnScrollListeners()
+            recyclerView.addOnScrollListener(InfiniteScrollListener({ requestNews() }, linearLayout))
+        }
+
+
     }
 
     fun initAdapter() {

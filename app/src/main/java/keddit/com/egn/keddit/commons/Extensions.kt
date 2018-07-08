@@ -1,6 +1,7 @@
 package keddit.com.egn.keddit.commons
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,4 +17,12 @@ fun ViewGroup.inflate(layoutId: Int, attactToRoot: Boolean = false): View {
 
 fun ImageView.loadImage(url: String) {
     Glide.with(context).load(url).into(this)
+}
+
+fun String.LogI(tag: String = "") {
+    Log.i("hanhmh1203 $tag", this)
+}
+
+fun String.LogE(tag: String ="") {
+    Log.e("hanhmh1203 $tag", this)
 }
