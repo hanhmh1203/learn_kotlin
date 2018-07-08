@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 
 import keddit.com.egn.keddit.R
 import keddit.com.egn.keddit.commons.NewsAdapter
+import keddit.com.egn.keddit.commons.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
@@ -40,6 +41,14 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initAdapter()
+        if(savedInstanceState==null){
+            val news = mutableListOf<RedditNewsItem>()
+            for (i in 1..10){
+                news.add(RedditNewsItem("author$i","title$i",i, 1457207701L - i * 200,
+                        "http://lorempixel.com/200/200/technics/$i","url"))
+            }
+            (recyclerView.adapter as NewsAdapter).addNews(news)
+        }
     }
 
     fun initRecyclerView() {
