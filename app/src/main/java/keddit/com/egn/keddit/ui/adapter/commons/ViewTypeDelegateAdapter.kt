@@ -1,4 +1,4 @@
-package keddit.com.egn.keddit.commons
+package keddit.com.egn.keddit.ui.adapter.commons
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup

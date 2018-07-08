@@ -1,7 +1,9 @@
-package keddit.com.egn.keddit.commons
+package keddit.com.egn.keddit.ui.adapter.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import keddit.com.egn.keddit.commons.AdapterConstrants
+import keddit.com.egn.keddit.ui.adapter.commons.ViewType
 
 data class RedditNewsItem(val author: String,
                           val title: String,

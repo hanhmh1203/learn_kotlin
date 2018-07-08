@@ -1,23 +1,28 @@
-package keddit.com.egn.keddit.commons
+package keddit.com.egn.keddit.ui.adapter
 
 import android.support.v4.util.SparseArrayCompat
 import android.support.v7.widget.RecyclerView
-import android.util.SparseArray
 import android.view.ViewGroup
-import java.util.*
+import keddit.com.egn.keddit.commons.*
+import keddit.com.egn.keddit.ui.adapter.commons.ViewType
+import keddit.com.egn.keddit.ui.adapter.commons.ViewTypeDelegateAdapter
+import keddit.com.egn.keddit.ui.adapter.model.LoadingItem
+import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import kotlin.collections.ArrayList
 
 class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: ArrayList<ViewType>
     private var delegateAdapters = SparseArrayCompat<ViewTypeDelegateAdapter>()
-    private val loadingItem = object : ViewType {
-        override fun getViewType() = AdapterConstrants.LOADING
-    }
+    //    private val loadingItem = object : ViewType {
+//        override fun getViewType() = AdapterConstrants.LOADING
+//    }
+    private val loadingItem = LoadingItem
 
     fun addNews(news: List<RedditNewsItem>) {
+        //remove loading item first
         val initPosition = items.size - 1
         items.removeAt(initPosition)
-        notifyItemRemoved(initPosition)
+        notifyItemRemoved(initPosition) // change at position remove
         items.addAll(news)
         items.add(loadingItem)
         notifyItemRangeChanged(initPosition, items.size + 1 /* plus loading item */)
@@ -46,16 +51,16 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         items.add(loadingItem)
     }
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-        return delegateAdapters.get(p1).onCreateViewHolder(p0)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): RecyclerView.ViewHolder {
+        return delegateAdapters.get(position).onCreateViewHolder(viewGroup)
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
-        delegateAdapters.get(getItemViewType(p1)).onBindViewHolder(p0, this.items[p1])
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        delegateAdapters.get(getItemViewType(position)).onBindViewHolder(viewHolder, this.items[position])
     }
 
     override fun getItemViewType(position: Int): Int {

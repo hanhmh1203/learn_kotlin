@@ -8,13 +8,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 
 import keddit.com.egn.keddit.R
-import keddit.com.egn.keddit.commons.NewsAdapter
-import keddit.com.egn.keddit.commons.RedditNewsItem
+import keddit.com.egn.keddit.ui.adapter.NewsAdapter
+import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,8 +42,8 @@ class FirstFragment : Fragment() {
         if(savedInstanceState==null){
             val news = mutableListOf<RedditNewsItem>()
             for (i in 1..10){
-                news.add(RedditNewsItem("author$i","title$i",i, 1457207701L - i * 200,
-                        "http://lorempixel.com/200/200/technics/$i","url"))
+                news.add(RedditNewsItem("author$i", "title$i", i, 1457207701L - i * 200,
+                        "http://lorempixel.com/200/200/technics/$i", "url"))
             }
             (recyclerView.adapter as NewsAdapter).addNews(news)
         }
