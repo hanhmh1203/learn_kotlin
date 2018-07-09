@@ -21,6 +21,7 @@ import keddit.com.egn.keddit.ui.adapter.NewsAdapter
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
 import keddit.com.egn.keddit.ui.adapter.commons.InfiniteScrollListener
+import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
 import keddit.com.egn.keddit.ui.adapter.model.RedditNews
 import keddit.com.egn.keddit.ui.worker.NewsManager
 import kotlinx.android.synthetic.main.fragment_first.*
@@ -75,7 +76,7 @@ class FirstFragment : RxBaseFragment() {
         val news = (recyclerView.adapter as NewsAdapter).getNews()
         if (redditNews != null && news.size > 0) {
             "onSaveInstanceState size: ${news.size}".LogI()
-            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news))
+            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news as List<RedditNewsItem>))
         }
     }
 
@@ -85,6 +86,7 @@ class FirstFragment : RxBaseFragment() {
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     redditNews = it
+                    (recyclerView.adapter as NewsAdapter).addHeader(HeaderItem(center = redditNews!!.news[0].author))
                     (recyclerView.adapter as NewsAdapter).addNews(redditNews!!.news)
                 }, { Log.e("hanhmh1203", it.message) })
         compositeDisposable.add(disposable)
