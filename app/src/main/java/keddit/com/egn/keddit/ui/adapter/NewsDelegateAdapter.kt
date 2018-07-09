@@ -12,17 +12,20 @@ import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import kotlinx.android.synthetic.main.news_item.view.*
 
 class NewsDelegateAdapter : ViewTypeDelegateAdapter {
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+    //    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+//        return TurnsViewHolder(parent)
+//    }
+    override fun onCreateViewHolder(parent: ViewGroup, expanableInterface: ExpanableInterface): RecyclerView.ViewHolder {
         return TurnsViewHolder(parent)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int) {
         holder as TurnsViewHolder
-        holder.bind(item as RedditNewsItem)
+        holder.bind(item as RedditNewsItem, position)
     }
 
     class TurnsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent.inflate(R.layout.news_item)) {
-        fun bind(item: RedditNewsItem) = with(itemView) {
+        fun bind(item: RedditNewsItem, position: Int) = with(itemView) {
             img_thumbnail.loadImage(item.thumbnail)
             description.text = item.title
             author.text = item.author

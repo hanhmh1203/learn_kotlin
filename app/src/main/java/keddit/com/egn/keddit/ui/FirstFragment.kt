@@ -16,6 +16,7 @@ import io.reactivex.schedulers.Schedulers
 
 import keddit.com.egn.keddit.R
 import keddit.com.egn.keddit.base.RxBaseFragment
+import keddit.com.egn.keddit.commons.AdapterConstrants
 import keddit.com.egn.keddit.commons.LogI
 import keddit.com.egn.keddit.ui.adapter.NewsAdapter
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
@@ -58,35 +59,39 @@ class FirstFragment : RxBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initAdapter()
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
-            "savedInstanceState".LogI()
-            redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
-            "Load savedInstanceState size ${redditNews!!.news.size}"
-            (recyclerView.adapter as NewsAdapter).clearAndAddNews(redditNews!!.news)
-
-        } else {
-            requestNews()
-        }
-
+//        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
+//            "savedInstanceState".LogI()
+//            redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
+//            "Load savedInstanceState size ${redditNews!!.news.size}"
+//            (recyclerView.adapter as NewsAdapter).clearAndAddNews(redditNews!!.news)
+//
+//        } else {
+//            requestNews()
+//        }
+        requestNews()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        "onSaveInstanceState".LogI()
-        val news = (recyclerView.adapter as NewsAdapter).getNews()
-        if (redditNews != null && news.size > 0) {
-            "onSaveInstanceState size: ${news.size}".LogI()
-            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news as List<RedditNewsItem>))
-        }
+        // pendding
+//        "onSaveInstanceState".LogI()
+//        val news = (recyclerView.adapter as NewsAdapter).getNews()
+//        if (redditNews != null && news.size > 0) {
+//            "onSaveInstanceState size: ${news.size}".LogI()
+//            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news as List<RedditNewsItem>))
+//        }
     }
 
     private fun requestNews() {
         "requestNews ".LogI()
         disposable = newsManager.getNews(redditNews?.after ?: "")
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     redditNews = it
-                    (recyclerView.adapter as NewsAdapter).addHeader(HeaderItem(center = redditNews!!.news[0].author))
+                    "newsadapter size of list request ${it.news.size}".LogI()
+                    var headerItem = HeaderItem(center = redditNews!!.news[0].author, groupByType = AdapterConstrants.NEWS)
+                    (recyclerView.adapter as NewsAdapter).addHeader(headerItem)
                     (recyclerView.adapter as NewsAdapter).addNews(redditNews!!.news)
                 }, { Log.e("hanhmh1203", it.message) })
         compositeDisposable.add(disposable)

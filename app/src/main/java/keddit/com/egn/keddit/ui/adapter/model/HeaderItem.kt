@@ -8,8 +8,9 @@ import keddit.com.egn.keddit.ui.adapter.commons.ViewType
 /**
  * Created by Mai Huu Hanh on 7/8/18.
  */
-data class HeaderItem(val left: String = "Left", val right: String = "Right", val center: String = "Center") : ViewType, Parcelable {
+data class HeaderItem(val left: String = "Left", val right: String = "Right", val center: String = "Center", val groupByType: Int? = 0) : ViewType, Parcelable {
     override fun getViewType() = AdapterConstrants.HEADER
+    public var isExpanable: Boolean = true
 
     constructor(source: Parcel) : this(
             source.readString(),

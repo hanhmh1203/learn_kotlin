@@ -8,10 +8,11 @@ import keddit.com.egn.keddit.ui.adapter.commons.ViewTypeDelegateAdapter
 import keddit.com.egn.keddit.commons.inflate
 
 class LoadingDelegateAdapter : ViewTypeDelegateAdapter {
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder = TurnsViewHolder(parent)
 
+    //    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder = TurnsViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, expanableInterface: ExpanableInterface): RecyclerView.ViewHolder = TurnsViewHolder(parent)
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int) {
     }
 
     class TurnsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
