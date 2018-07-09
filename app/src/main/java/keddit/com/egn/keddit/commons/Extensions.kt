@@ -1,6 +1,8 @@
 package keddit.com.egn.keddit.commons
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,9 @@ fun ViewGroup.inflate(layoutId: Int, attactToRoot: Boolean = false): View {
 
 fun ImageView.loadImage(url: String) {
     Glide.with(context).load(url).into(this)
+}
+inline fun <reified T : Activity> Activity.startActivity() {
+    startActivity(Intent(this, T::class.java))
 }
 
 fun String.LogI(tag: String = "") {
