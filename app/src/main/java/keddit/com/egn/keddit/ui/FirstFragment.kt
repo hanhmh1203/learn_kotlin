@@ -106,7 +106,7 @@ class FirstFragment : RxBaseFragment() {
         compositeDisposable.add(disposable)
     }
 
-    fun initRecyclerView() {
+    private fun initRecyclerView() {
         recyclerView.apply {
             recyclerView.setHasFixedSize(true)
 
@@ -119,9 +119,9 @@ class FirstFragment : RxBaseFragment() {
 
     }
 
-    fun initAdapter() {
+    private fun initAdapter() {
         if (recyclerView.adapter == null) {
-            recyclerView.adapter = NewsAdapter()
+            recyclerView.adapter = NewsAdapter { viewType: ViewType -> onItemClick(viewType) }
         }
     }
 
@@ -133,7 +133,9 @@ class FirstFragment : RxBaseFragment() {
     override fun onDetach() {
         super.onDetach()
     }
-
+    private fun onItemClick(viewType: ViewType){
+        (viewType as RedditNewsItem).author.LogI()
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

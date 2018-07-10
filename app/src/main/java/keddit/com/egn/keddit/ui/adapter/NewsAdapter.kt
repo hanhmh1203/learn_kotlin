@@ -11,21 +11,22 @@ import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
 import keddit.com.egn.keddit.ui.adapter.model.LoadingItem
 import kotlin.collections.ArrayList
 
-class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableInterface {
+class NewsAdapter(val clickListener: (ViewType) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableInterface {
     /**
      * for expanable list
      */
-    override fun ex(positionHeader: Int, items: List<ViewType>?) {
+    override fun expandable(positionHeader: Int, items: List<ViewType>?) {
         if (items != null) {
             this.items.addAll(positionHeader + 1, (items))
             notifyItemRangeInserted(positionHeader + 1, items.size)
             (items as ArrayList).clear()
         }
     }
+
     /**
      * for unexpanable list
      */
-    override fun unEx(positionHeader: Int): List<ViewType> {
+    override fun unExpandable(positionHeader: Int): List<ViewType> {
         var headerItem = items.get(positionHeader) as HeaderItem
         var itemsRemove = items.filter {
             (it as BaseItem).groupBy!!.contentEquals(StringBuilder(headerItem.groupBy))
@@ -113,7 +114,7 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableIn
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        delegateAdapters.get(getItemViewType(position)).onBindViewHolder(viewHolder, this.items[position], position)
+        delegateAdapters.get(getItemViewType(position)).onBindViewHolder(viewHolder, this.items[position], position, clickListener)
     }
 
     override fun getItemViewType(position: Int): Int {

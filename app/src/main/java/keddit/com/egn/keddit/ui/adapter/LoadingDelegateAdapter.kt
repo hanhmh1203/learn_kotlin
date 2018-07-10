@@ -12,7 +12,10 @@ class LoadingDelegateAdapter : ViewTypeDelegateAdapter {
     //    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder = TurnsViewHolder(parent)
     override fun onCreateViewHolder(parent: ViewGroup, expanableInterface: ExpanableInterface): RecyclerView.ViewHolder = TurnsViewHolder(parent)
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int) {
+//    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int) {
+//    }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int, clickListener: (ViewType) -> Unit) {
+
     }
 
     class TurnsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(

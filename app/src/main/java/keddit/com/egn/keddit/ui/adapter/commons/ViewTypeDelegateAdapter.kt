@@ -7,6 +7,8 @@ import keddit.com.egn.keddit.ui.adapter.ExpanableInterface
 
 interface ViewTypeDelegateAdapter {
     fun onCreateViewHolder(parent: ViewGroup, expanableInterface: ExpanableInterface): RecyclerView.ViewHolder
-    fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int)
+    fun onBindViewHolder(holder: RecyclerView.ViewHolder,
+                         item: ViewType, position: Int,
+                         clickListener: (ViewType) -> Unit)
 
 }

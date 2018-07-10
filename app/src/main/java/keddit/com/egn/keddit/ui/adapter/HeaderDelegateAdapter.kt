@@ -1,18 +1,13 @@
 package keddit.com.egn.keddit.ui.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseExpandableListAdapter
-import android.widget.ImageView
 import keddit.com.egn.keddit.R
 import keddit.com.egn.keddit.commons.*
 import keddit.com.egn.keddit.ui.adapter.commons.ViewType
 import keddit.com.egn.keddit.ui.adapter.commons.ViewTypeDelegateAdapter
 import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
-import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import kotlinx.android.synthetic.main.header.view.*
-import kotlinx.android.synthetic.main.news_item.view.*
 
 class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
 
@@ -23,7 +18,7 @@ class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
         return TurnsViewHolder(parent, adapter)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType, position: Int, clickListener: (ViewType) -> Unit) {
         holder as TurnsViewHolder
         holder.bind(item as HeaderItem, position)
     }
@@ -35,7 +30,7 @@ class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
             tvLeft.text = item.left
             tvRight.text = item.right
             tvCenter.text = item.center
-            tvRight.setOnClickListener {
+            itemView.setOnClickListener {
                 expanable(adapter, item, position)
             }
         }
@@ -43,9 +38,9 @@ class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
         private fun expanable(adapter: ExpanableInterface, item: ViewType, position: Int) {
             val headerItem = item as HeaderItem
             if (headerItem.isExpanable) {
-                headerItem.listChild = adapter.unEx(position) as ArrayList<ViewType>
+                headerItem.listChild = adapter.unExpandable(position) as ArrayList<ViewType>
             } else {
-                adapter.ex(position, headerItem.listChild)
+                adapter.expandable(position, headerItem.listChild)
             }
             headerItem.isExpanable = !headerItem.isExpanable
         }
