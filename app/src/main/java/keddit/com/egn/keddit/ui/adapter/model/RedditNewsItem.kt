@@ -31,7 +31,7 @@ data class RedditNewsItem(val author: String,
                           val numComments: Int,
                           val created: Long,
                           val thumbnail: String,
-                          val url: String?) : ViewType, Parcelable {
+                          val url: String?) : BaseItem(), Parcelable {
 
     override fun getViewType() = AdapterConstrants.NEWS
 

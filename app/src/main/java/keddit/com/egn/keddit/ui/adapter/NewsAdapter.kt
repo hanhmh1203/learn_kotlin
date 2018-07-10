@@ -6,44 +6,35 @@ import android.view.ViewGroup
 import keddit.com.egn.keddit.commons.*
 import keddit.com.egn.keddit.ui.adapter.commons.ViewType
 import keddit.com.egn.keddit.ui.adapter.commons.ViewTypeDelegateAdapter
+import keddit.com.egn.keddit.ui.adapter.model.BaseItem
+import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
 import keddit.com.egn.keddit.ui.adapter.model.LoadingItem
 import kotlin.collections.ArrayList
 
 class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableInterface {
+    /**
+     * for expanable list
+     */
     override fun ex(positionHeader: Int, items: List<ViewType>?) {
-        "NewsAdapter positionHeader $positionHeader".LogI()
         if (items != null) {
             this.items.addAll(positionHeader + 1, (items))
-            notifyItemRangeInserted(positionHeader+1, items.size)
+            notifyItemRangeInserted(positionHeader + 1, items.size)
+            (items as ArrayList).clear()
         }
     }
-
+    /**
+     * for unexpanable list
+     */
     override fun unEx(positionHeader: Int): List<ViewType> {
-        "NewsAdapter unex positionHeader $positionHeader".LogE()
-        var itemsRemove: ArrayList<ViewType>
-        itemsRemove = ArrayList()
-        var posLast = getLastPosition()
-        for (i in positionHeader + 1..positionHeader + 10) {
-            itemsRemove.add(items[i])
+        var headerItem = items.get(positionHeader) as HeaderItem
+        var itemsRemove = items.filter {
+            (it as BaseItem).groupBy!!.contentEquals(StringBuilder(headerItem.groupBy))
         }
-        items.removeAll(itemsRemove)
+        (itemsRemove as ArrayList).remove(headerItem)
+        items.removeAll(itemsRemove as ArrayList)
         this.notifyItemRangeRemoved(positionHeader + 1, itemsRemove.size)
         return itemsRemove
     }
-//    override fun unEx(positionHeader: Int): List<ViewType> {
-//        "NewsAdapter unex positionHeader $positionHeader".LogE()
-//        var itemsRemove: ArrayList<ViewType>
-//        itemsRemove = ArrayList()
-//        var posLast = getLastPosition()
-//        for (i in positionHeader + 1..items.size - 1) {
-//            itemsRemove.add(items[i])
-//        }
-//        items.removeAll(itemsRemove)
-//        var lastPosition = (items.size - 1) + (itemsRemove.size - 1) as Int
-//        "size items before $posLast, itemsremove ${itemsRemove.size}, items after ${items.size}, lastposition $lastPosition".LogI()
-//            this.notifyItemRangeRemoved(positionHeader + 1, itemsRemove.size)
-//        return itemsRemove
-//    }
 
     private var items: ArrayList<ViewType>
     private var delegateAdapters = SparseArrayCompat<ViewTypeDelegateAdapter>()
@@ -51,44 +42,49 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableIn
 
     fun addNews(news: List<ViewType>) {
         //remove loading item first
-//        val initPosition = items.size - 1
-//        items.removeAt(initPosition)
-//        notifyItemRemoved(initPosition) // change at position remove
+        if (news[0] is HeaderItem) {
+            var header = news[0] as HeaderItem
+            addHeader(news[0])
+            (news as ArrayList).remove(header)
+            if (!header.isExpanable) {
+                header.listChild.addAll(news)
+                news.clear()
+            }
+        }
+        val initPosition = items.size - 1
+        items.removeAt(initPosition)
+        notifyItemRemoved(initPosition) // change at position remove
 
         items.addAll(news)
-        var posFrom = items.size - news.size-1
-        var posTo = items.size+1
-        notifyItemRangeChanged(posFrom, posTo)
-//        notifyDataSetChanged()
-//        items.add(loadingItem)
-//        notifyItemRangeChanged(initPosition, items.size + 1 /* plus loading item */)
+        var posFrom = items.size - news.size - 1
+        items.add(loadingItem)
+
+        notifyItemRangeInserted(posFrom, items.size  /* plus loading item */)
     }
 
     fun addHeader(new: ViewType) {
         //remove loading item first
-//        val initPosition = items.size - 1
-//        items.removeAt(initPosition)
-//        notifyItemRemoved(initPosition) // change at position remove
+        val initPosition = items.size - 1
+        items.removeAt(initPosition)
+        notifyItemRemoved(initPosition) // change at position remove
         if (items == null) {
             items = ArrayList()
         }
         items.add(new)
-//        notifyDataSetChanged()
         if (items.size == 1) {
             notifyDataSetChanged()
         } else {
             notifyItemInserted(items.size - 1)
         }
-//        items.add(loadingItem)
-//        notifyItemChanged(items.size + 1)
-//        notifyItemRangeChanged(initPosition, items.size + 1 /* plus loading item */)
+        items.add(loadingItem)
+        notifyItemInserted(items.size)
     }
 
     fun clearAndAddNews(news: List<ViewType>) {
         items.clear()
         notifyItemRangeRemoved(0, getLastPosition())
         items.addAll(news)
-//        items.add(loadingItem)
+        items.add(loadingItem)
         notifyItemRangeInserted(0, items.size)
     }
 
@@ -105,7 +101,7 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableIn
         delegateAdapters.put(AdapterConstrants.LOADING, LoadingDelegateAdapter())
         delegateAdapters.put(AdapterConstrants.NEWS, NewsDelegateAdapter())
         delegateAdapters.put(AdapterConstrants.HEADER, HeaderDelegateAdapter())
-//        items.add(loadingItem)
+        items.add(loadingItem)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): RecyclerView.ViewHolder {

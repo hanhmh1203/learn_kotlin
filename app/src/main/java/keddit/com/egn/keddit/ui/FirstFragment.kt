@@ -22,6 +22,7 @@ import keddit.com.egn.keddit.ui.adapter.NewsAdapter
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
 import keddit.com.egn.keddit.ui.adapter.commons.InfiniteScrollListener
+import keddit.com.egn.keddit.ui.adapter.commons.ViewType
 import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
 import keddit.com.egn.keddit.ui.adapter.model.RedditNews
 import keddit.com.egn.keddit.ui.worker.NewsManager
@@ -89,10 +90,18 @@ class FirstFragment : RxBaseFragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     redditNews = it
-                    "newsadapter size of list request ${it.news.size}".LogI()
-                    var headerItem = HeaderItem(center = redditNews!!.news[0].author, groupByType = AdapterConstrants.NEWS)
-                    (recyclerView.adapter as NewsAdapter).addHeader(headerItem)
-                    (recyclerView.adapter as NewsAdapter).addNews(redditNews!!.news)
+                    var headerItem = HeaderItem(center = redditNews!!.news[0].author)
+                    // for groupby
+                    var random = Math.random()
+                    headerItem.isExpanable = true
+                    headerItem.groupBy = random.toString()
+                    redditNews!!.news.forEach { it.groupBy = random.toString() }
+
+                    // add to items adapter
+                    var items = redditNews!!.news as ArrayList<ViewType>
+                    items.add(0, headerItem)
+                    (recyclerView.adapter as NewsAdapter).addNews(items)
+
                 }, { Log.e("hanhmh1203", it.message) })
         compositeDisposable.add(disposable)
     }

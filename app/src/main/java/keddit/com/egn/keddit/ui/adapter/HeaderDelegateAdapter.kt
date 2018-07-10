@@ -16,11 +16,7 @@ import kotlinx.android.synthetic.main.news_item.view.*
 
 class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
 
-    //    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-//        return TurnsViewHolder(parent)
-//    }
     lateinit var adapter: ExpanableInterface
-    var itemsChild: List<ViewType> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, expanableInterface: ExpanableInterface): RecyclerView.ViewHolder {
         adapter = expanableInterface
@@ -33,23 +29,23 @@ class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
     }
 
     class TurnsViewHolder(parent: ViewGroup, adapter: ExpanableInterface) : RecyclerView.ViewHolder(parent.inflate(R.layout.header)) {
-        var itemsChild: List<ViewType> = emptyList()
         val adapter = adapter
+
         fun bind(item: HeaderItem, position: Int) = with(itemView) {
-            tvLeft.setText(item.left)
-            tvRight.setText(item.right)
-            tvCenter.setText(item.center)
-            tvCenter.setOnClickListener(View.OnClickListener {
+            tvLeft.text = item.left
+            tvRight.text = item.right
+            tvCenter.text = item.center
+            tvRight.setOnClickListener {
                 expanable(adapter, item, position)
-            })
+            }
         }
 
         private fun expanable(adapter: ExpanableInterface, item: ViewType, position: Int) {
             val headerItem = item as HeaderItem
             if (headerItem.isExpanable) {
-                itemsChild = adapter.unEx(position)
+                headerItem.listChild = adapter.unEx(position) as ArrayList<ViewType>
             } else {
-                adapter.ex(position,itemsChild)
+                adapter.ex(position, headerItem.listChild)
             }
             headerItem.isExpanable = !headerItem.isExpanable
         }
