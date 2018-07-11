@@ -16,11 +16,18 @@ class NewsAdapter(val clickListener: (ViewType) -> Unit) : RecyclerView.Adapter<
      * for expanable list
      */
     override fun expandable(positionHeader: Int, items: List<ViewType>?) {
-        if (items != null) {
-            this.items.addAll(positionHeader + 1, (items))
-            notifyItemRangeInserted(positionHeader + 1, items.size)
-            (items as ArrayList).clear()
-        }
+//        if (items != null) {
+//            this.items.addAll(positionHeader + 1, (items))
+//            notifyItemRangeInserted(positionHeader + 1, items.size)
+//            (items as ArrayList).clear()
+//        }
+//        var positionHeader = itemsList.indexOf(headerItem)
+//        var items= headerItem.listChild
+//        if (items != null) {
+//            this.itemsList.addAll(positionHeader + 1, (items))
+//            notifyItemRangeInserted(positionHeader + 1, items.size)
+//            (items as ArrayList).clear()
+//        }
     }
 
     /**
@@ -35,6 +42,15 @@ class NewsAdapter(val clickListener: (ViewType) -> Unit) : RecyclerView.Adapter<
         items.removeAll(itemsRemove as ArrayList)
         this.notifyItemRangeRemoved(positionHeader + 1, itemsRemove.size)
         return itemsRemove
+
+//        var positionHeader = itemsList.indexOf(headerItem)
+//        var itemsRemove = itemsList.filter {
+//            (it as BaseItem).groupBy!!.contentEquals(StringBuilder(headerItem.groupBy))
+//        }
+//        (itemsRemove as ArrayList).remove(headerItem)
+//        itemsList.removeAll(itemsRemove as ArrayList)
+//        this.notifyItemRangeRemoved(positionHeader + 1, itemsRemove.size)
+//        return itemsRemove
     }
 
     private var items: ArrayList<ViewType>
