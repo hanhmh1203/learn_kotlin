@@ -11,46 +11,32 @@ import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
 import keddit.com.egn.keddit.ui.adapter.model.LoadingItem
 import kotlin.collections.ArrayList
 
-class NewsAdapter(val clickListener: (ViewType) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableInterface {
+class ExpanableAdapter(val clickListener: (ViewType) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ExpanableInterface {
     /**
      * for expanable list
      */
-    override fun expandable(positionHeader: Int, items: List<ViewType>?) {
-//        if (items != null) {
-//            this.items.addAll(positionHeader + 1, (items))
-//            notifyItemRangeInserted(positionHeader + 1, items.size)
-//            (items as ArrayList).clear()
-//        }
-//        var positionHeader = itemsList.indexOf(headerItem)
-//        var items= headerItem.listChild
-//        if (items != null) {
-//            this.itemsList.addAll(positionHeader + 1, (items))
-//            notifyItemRangeInserted(positionHeader + 1, items.size)
-//            (items as ArrayList).clear()
-//        }
+    override fun expandable(headerItem: HeaderItem) {
+        var positionHeader = items.indexOf(headerItem)
+        var listChild = headerItem.listChild
+        if (listChild != null) {
+            this.items.addAll(positionHeader + 1, (listChild))
+            notifyItemRangeInserted(positionHeader + 1, listChild.size)
+            headerItem.listChild.clear()
+        }
     }
 
     /**
      * for unexpanable list
      */
-    override fun unExpandable(positionHeader: Int): List<ViewType> {
-        var headerItem = items.get(positionHeader) as HeaderItem
+    override fun unExpandable(headerItem: HeaderItem): List<ViewType> {
+        var positionHeader = items.indexOf(headerItem)
         var itemsRemove = items.filter {
             (it as BaseItem).groupBy!!.contentEquals(StringBuilder(headerItem.groupBy))
         }
         (itemsRemove as ArrayList).remove(headerItem)
-        items.removeAll(itemsRemove as ArrayList)
+        items.removeAll(itemsRemove)
         this.notifyItemRangeRemoved(positionHeader + 1, itemsRemove.size)
         return itemsRemove
-
-//        var positionHeader = itemsList.indexOf(headerItem)
-//        var itemsRemove = itemsList.filter {
-//            (it as BaseItem).groupBy!!.contentEquals(StringBuilder(headerItem.groupBy))
-//        }
-//        (itemsRemove as ArrayList).remove(headerItem)
-//        itemsList.removeAll(itemsRemove as ArrayList)
-//        this.notifyItemRangeRemoved(positionHeader + 1, itemsRemove.size)
-//        return itemsRemove
     }
 
     private var items: ArrayList<ViewType>

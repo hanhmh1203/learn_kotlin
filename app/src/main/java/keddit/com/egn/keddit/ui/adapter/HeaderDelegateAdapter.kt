@@ -38,9 +38,9 @@ class HeaderDelegateAdapter : ViewTypeDelegateAdapter {
         private fun expanable(adapter: ExpanableInterface, item: ViewType, position: Int) {
             val headerItem = item as HeaderItem
             if (headerItem.isExpanable) {
-                headerItem.listChild = adapter.unExpandable(position) as ArrayList<ViewType>
+                headerItem.listChild = adapter.unExpandable(headerItem) as ArrayList<ViewType>
             } else {
-                adapter.expandable(position, headerItem.listChild)
+                adapter.expandable(headerItem)
             }
             headerItem.isExpanable = !headerItem.isExpanable
         }

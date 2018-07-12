@@ -11,14 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 
 import keddit.com.egn.keddit.R
 import keddit.com.egn.keddit.base.RxBaseFragment
-import keddit.com.egn.keddit.commons.AdapterConstrants
 import keddit.com.egn.keddit.commons.LogI
-import keddit.com.egn.keddit.ui.adapter.NewsAdapter
+import keddit.com.egn.keddit.ui.adapter.ExpanableAdapter
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
 import keddit.com.egn.keddit.commons.inflate
 import keddit.com.egn.keddit.ui.adapter.commons.InfiniteScrollListener
@@ -64,7 +62,7 @@ class FirstFragment : RxBaseFragment() {
 //            "savedInstanceState".LogI()
 //            redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
 //            "Load savedInstanceState size ${redditNews!!.news.size}"
-//            (recyclerView.adapter as NewsAdapter).clearAndAddNews(redditNews!!.news)
+//            (recyclerView.adapter as ExpanableAdapter).clearAndAddNews(redditNews!!.news)
 //
 //        } else {
 //            requestNews()
@@ -76,7 +74,7 @@ class FirstFragment : RxBaseFragment() {
         super.onSaveInstanceState(outState)
         // pendding
 //        "onSaveInstanceState".LogI()
-//        val news = (recyclerView.adapter as NewsAdapter).getNews()
+//        val news = (recyclerView.adapter as ExpanableAdapter).getNews()
 //        if (redditNews != null && news.size > 0) {
 //            "onSaveInstanceState size: ${news.size}".LogI()
 //            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news as List<RedditNewsItem>))
@@ -100,7 +98,7 @@ class FirstFragment : RxBaseFragment() {
                     // add to items adapter
                     var items = redditNews!!.news as ArrayList<ViewType>
                     items.add(0, headerItem)
-                    (recyclerView.adapter as NewsAdapter).addNews(items)
+                    (recyclerView.adapter as ExpanableAdapter).addNews(items)
 
                 }, { Log.e("hanhmh1203", it.message) })
         compositeDisposable.add(disposable)
@@ -121,7 +119,7 @@ class FirstFragment : RxBaseFragment() {
 
     private fun initAdapter() {
         if (recyclerView.adapter == null) {
-            recyclerView.adapter = NewsAdapter { viewType: ViewType -> onItemClick(viewType) }
+            recyclerView.adapter = ExpanableAdapter { viewType: ViewType -> onItemClick(viewType) }
         }
     }
 
