@@ -4,16 +4,32 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import dagger.android.AndroidInjection
+import keddit.com.egn.keddit.commons.LogI
+import keddit.com.egn.keddit.di.DaggerAppComponent
+import keddit.com.egn.keddit.di.a.DaggerMainActivityComponent
+import keddit.com.egn.keddit.di.a.MainActivityComponent
 import keddit.com.egn.keddit.ui.FirstFragment
+import keddit.com.egn.keddit.ui.worker.NewsManager
+import keddit.com.egn.keddit.ui.worker.RestAPI
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-
+    @Inject lateinit var restAPI: RestAPI
+    @Inject lateinit var newsManager: NewsManager
+    lateinit var component: MainActivityComponent
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        component= DaggerMainActivityComponent.builder().build()
+        component.inject(this)
+//        DaggerAppComponent.builder().build().inject(application as AppKeddit)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             changeFragment(FirstFragment(), true)
         }
+        newsManager.text.LogI("MainActivity")
+        restAPI.isNotNull()
+        newsManager.action()
     }
 
     fun changeFragment(f: Fragment, cleanStack: Boolean = false) {

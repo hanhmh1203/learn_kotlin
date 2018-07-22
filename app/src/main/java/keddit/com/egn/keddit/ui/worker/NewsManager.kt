@@ -3,12 +3,17 @@ package keddit.com.egn.keddit.ui.worker
 import io.reactivex.Observable
 import keddit.com.egn.keddit.ui.adapter.model.RedditNews
 import keddit.com.egn.keddit.ui.adapter.model.RedditNewsItem
+import javax.inject.Inject
 
 /**
  * Created by Mai Huu Hanh on 7/8/18.
  */
-class NewsManager(private val api: RestAPI = RestAPI()) {
-
+class NewsManager @Inject constructor() {
+    @Inject lateinit var api: RestAPI
+    fun action(){
+        api.isNotNull()
+    }
+    val text = "newsmanager is not null"
     fun getNews(after: String, limit: String = "10"): Observable<RedditNews> {
         return Observable.create { subcriber ->
             val news = mutableListOf<RedditNewsItem>()
