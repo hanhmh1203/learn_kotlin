@@ -10,9 +10,6 @@ import javax.inject.Inject
  */
 class NewsManager(val api: RestAPI? = null) {
     val text = "newsmanager is not null"
-    fun action(){
-        api?.isNotNull()
-    }
     fun getNews(after: String, limit: String = "10"): Observable<RedditNews> {
         return Observable.create { subcriber ->
             val news = mutableListOf<RedditNewsItem>()

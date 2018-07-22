@@ -25,6 +25,7 @@ import keddit.com.egn.keddit.ui.adapter.model.HeaderItem
 import keddit.com.egn.keddit.ui.adapter.model.RedditNews
 import keddit.com.egn.keddit.ui.worker.NewsManager
 import kotlinx.android.synthetic.main.fragment_first.*
+import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,8 +50,8 @@ class FirstFragment : RxBaseFragment() {
         return container?.inflate(R.layout.fragment_first)
     }
 
-    private val newsManager by lazy { NewsManager() }
-    //    private var disposables: Disposables?=null
+    @Inject
+    lateinit var newsManager: NewsManager
     private lateinit var disposable: Disposable
     private var redditNews: RedditNews? = null
 
@@ -131,9 +132,11 @@ class FirstFragment : RxBaseFragment() {
     override fun onDetach() {
         super.onDetach()
     }
-    private fun onItemClick(viewType: ViewType){
+
+    private fun onItemClick(viewType: ViewType) {
         (viewType as RedditNewsItem).author.LogI()
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

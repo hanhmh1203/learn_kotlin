@@ -14,17 +14,17 @@ import keddit.com.egn.keddit.ui.worker.RestAPI
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
-    @Inject lateinit var restAPI: RestAPI
-    @Inject lateinit var newsManager: NewsManager
+//    @Inject lateinit var restAPI: RestAPI
+//    @Inject lateinit var newsManager: NewsManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             changeFragment(FirstFragment(), true)
         }
-        newsManager.text.LogI("MainActivity")
-        newsManager.action()
-        restAPI.isNotNull()
+//        newsManager.text.LogI("MainActivity")
+//        newsManager.action()
+//        restAPI.isNotNull()
     }
 
     fun changeFragment(f: Fragment, cleanStack: Boolean = false) {
