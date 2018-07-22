@@ -3,13 +3,14 @@ package keddit.com.egn.keddit.base
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
+import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import keddit.com.egn.keddit.commons.LogI
 
 /**
  * Created by Mai Huu Hanh on 7/8/18.
  */
-open class RxBaseFragment : Fragment() {
+open class RxBaseFragment : DaggerFragment() {
     protected var compositeDisposable = CompositeDisposable()
     override fun onResume() {
         super.onResume()

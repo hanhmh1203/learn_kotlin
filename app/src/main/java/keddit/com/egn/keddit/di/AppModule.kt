@@ -8,10 +8,10 @@ import keddit.com.egn.keddit.ui.worker.RestAPI
 import javax.inject.Singleton
 
 @Module
-class AppModule(val app: AppKeddit) {
-    @Provides
-    @Singleton
-    fun provideApp() = app
+class AppModule() {
+//    @Provides
+//    @Singleton
+//    fun provideApp(appKeddit: AppKeddit) = appKeddit
 
     @Provides
     @Singleton
@@ -19,5 +19,10 @@ class AppModule(val app: AppKeddit) {
 
     @Provides
     @Singleton
-    fun provideNewsManager() = NewsManager()
+    fun provideNewsManager(restAPI: RestAPI) = NewsManager(restAPI)
+
+//    @Provides
+//    @Singleton
+//    fun provideNewsManager() = NewsManager()
+
 }

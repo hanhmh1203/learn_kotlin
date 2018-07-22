@@ -9,9 +9,9 @@ import keddit.com.egn.keddit.ui.worker.RestAPI
 import javax.inject.Singleton
 
 @Module
-class MainActivityModule(val mainActivity: MainActivity) {
-    @Provides
-    @Singleton
-    fun provideMainActivity() = mainActivity
+class MainActivityModule() {
+//    @Provides
+//    @Singleton
+//    fun provideMainActivity() = mainActivity
 
 }
